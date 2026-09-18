@@ -1,0 +1,268 @@
+<div class="usuarios-container">
+  <!-- HEADER -->
+  <div class="usuarios-header">
+    <h1><i class="fas fa-users"></i> Catalogo de Usuarios</h1>
+    <span class="badge">
+      <i class="fas fa-user-cog"></i> Gestión de usuarios
+    </span>
+  </div>
+
+  <!-- GRID PRINCIPAL -->
+  <div class="usuarios-grid">
+
+    <!-- ========== COLUMNA IZQUIERDA ========== -->
+    <div class="col-left">
+
+      <!-- DATOS DEL USUARIO -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-user-plus"></i>
+          <span>Datos del usuario</span>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label><i class="fas fa-hashtag"></i> Nómina</label>
+            <input type="text" [(ngModel)]="usuario.nomina" placeholder="NOM-001" class="form-control">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Nombre</label>
+            <input type="text" [(ngModel)]="usuario.nombre" placeholder="Nombre completo" class="form-control">
+          </div>
+          <div class="row-two">
+            <div class="form-group">
+              <label><i class="fas fa-building"></i> Departamento</label>
+              <input type="text" [(ngModel)]="usuario.departamento" placeholder="Departamento" class="form-control">
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-briefcase"></i> Puesto</label>
+              <input type="text" [(ngModel)]="usuario.puesto" placeholder="Puesto" class="form-control">
+            </div>
+          </div>
+          <div class="row-two">
+            <div class="form-group">
+              <label><i class="fas fa-layer-group"></i> Nivel</label>
+              <select [(ngModel)]="usuario.nivel" class="form-control">
+                <option value="">Seleccione un nivel</option>
+                <option value="it">it</option>
+                <option value="admin">admin</option>
+                <option value="poweruser">poweruser</option>
+                <option value="user">user</option>
+                <option value="invitado">invitado</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-envelope"></i> Correo</label>
+              <input type="email" [(ngModel)]="usuario.correo" placeholder="correo@empresa.com" class="form-control">
+            </div>
+          </div>
+          <div class="row-two">
+            <div class="form-group password-group">
+              <label><i class="fas fa-lock"></i> Contraseña</label>
+              <div class="password-input-wrapper">
+                <input [type]="mostrarContrasena ? 'text' : 'password'" [(ngModel)]="usuario.contrasena" placeholder="••••••••" class="form-control">
+                <button type="button" class="btn-icon password-toggle" (click)="toggleMostrarContrasena()" [title]="mostrarContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                  <i [class.fa-eye]="!mostrarContrasena" [class.fa-eye-slash]="mostrarContrasena" class="fas"></i>
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-user-tag"></i> Usuario</label>
+              <input type="text" [(ngModel)]="usuario.usuario" placeholder="Nombre de usuario" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-circle"></i> Estatus</label>
+            <select [(ngModel)]="usuario.estatus" class="form-control">
+              <option value="Seleccione un estatus">Seleccione un estatus</option>
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+              <option value="Bloqueado">Bloqueado</option>
+              <option value="Pendiente">Pendiente</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== COLUMNA DERECHA ========== -->
+    <div class="col-right">
+
+      <!-- RESUMEN DEL USUARIO -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-chart-pie"></i>
+          <span>Resumen del usuario</span>
+        </div>
+        <div class="section-content">
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">Nombre</span>
+              <span class="summary-value">{{ usuario.nombre || '—' }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Departamento</span>
+              <span class="summary-value">{{ usuario.departamento || '—' }}</span>
+            </div>
+            <div class="summary-item highlight">
+              <span class="summary-label">Nivel</span>
+              <span class="summary-value">{{ usuario.nivel || '—' }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Estatus</span>
+              <span class="summary-value">
+                <span class="status-badge" [class.status-activo]="usuario.estatus === 'Activo'"
+                      [class.status-inactivo]="usuario.estatus === 'Inactivo'"
+                      [class.status-bloqueado]="usuario.estatus === 'Bloqueado'"
+                      [class.status-pendiente]="usuario.estatus === 'Pendiente'">
+                  {{ usuario.estatus || '—' }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BÚSQUEDA RÁPIDA -->
+      <div class="section-card">
+        <div class="section-title">
+          <i class="fas fa-search"></i>
+          <span>Búsqueda y filtros</span>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label><i class="fas fa-search"></i> Buscar</label>
+            <div class="search-container">
+              <input type="text" [(ngModel)]="filtroBusqueda" placeholder="Buscar por nombre, usuario, correo..." class="form-control" (input)="aplicarFiltros()">
+              <button class="btn-search" (click)="aplicarFiltros()">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-filter"></i> Nivel</label>
+            <select [(ngModel)]="filtroNivel" (change)="aplicarFiltros()" class="form-control">
+              <option value="">Todos los niveles</option>
+              <option value="it">it</option>
+              <option value="admin">admin</option>
+              <option value="poweruser">poweruser</option>
+              <option value="user">user</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-filter"></i> Estatus</label>
+            <select [(ngModel)]="filtroEstatus" (change)="aplicarFiltros()" class="form-control">
+              <option value="">Todos los estatus</option>
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+              <option value="Bloqueado">Bloqueado</option>
+              <option value="Pendiente">Pendiente</option>
+            </select>
+          </div>
+          <div class="action-buttons">
+            <button class="btn-primary" (click)="guardarCambio()">
+              <i class="fas fa-save"></i> Guardar
+            </button>
+            <button class="btn-secondary" (click)="agregarUsuario()">
+              <i class="fas fa-plus"></i> Agregar
+            </button>
+            <button class="btn-secondary" (click)="limpiar()">
+              <i class="fas fa-eraser"></i> Limpiar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TABLA DE REGISTROS ========== -->
+  <div class="table-section">
+    <div class="table-header">
+      <h2><i class="fas fa-list"></i> Lista de usuarios</h2>
+      <div class="filters-bar">
+        <div class="filter-item">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Nómina" [(ngModel)]="filtroNomina" (input)="aplicarFiltros()">
+        </div>
+        <div class="filter-item">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Nombre" [(ngModel)]="filtroNombre" (input)="aplicarFiltros()">
+        </div>
+        <div class="filter-item">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Departamento" [(ngModel)]="filtroDepartamento" (input)="aplicarFiltros()">
+        </div>
+        <div class="filter-item">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Puesto" [(ngModel)]="filtroPuesto" (input)="aplicarFiltros()">
+        </div>
+        <span class="filter-badge">
+          <i class="fas fa-sliders-h"></i> {{ usuariosFiltrados.length }} registros
+        </span>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="usuarios-table">
+        <thead>
+          <tr>
+            <th>Nómina</th>
+            <th>Nombre</th>
+            <th>Departamento</th>
+            <th>Puesto</th>
+            <th>Usuario</th>
+            <th>Correo</th>
+            <th>Nivel</th>
+            <th>Estatus</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let registro of usuariosFiltrados; let i = index">
+            <td><strong>{{ registro.nomina || '—' }}</strong></td>
+            <td>{{ registro.nombre || '—' }}</td>
+            <td>{{ registro.departamento || '—' }}</td>
+            <td>{{ registro.puesto || '—' }}</td>
+            <td>{{ registro.usuario || '—' }}</td>
+            <td>{{ registro.correo || '—' }}</td>
+            <td>
+              <span class="level-badge" [class.level-it]="registro.nivel === 'it'"
+                    [class.level-admin]="registro.nivel === 'admin'"
+                    [class.level-supervisor]="registro.nivel === 'poweruser'"
+                    [class.level-operador]="registro.nivel === 'user'"
+                    [class.level-invitado]="registro.nivel === 'invitado'">
+                {{ registro.nivel || '—' }}
+              </span>
+            </td>
+            <td>
+              <span class="status-badge" [class.status-activo]="registro.estatus === 'Activo'"
+                    [class.status-inactivo]="registro.estatus === 'Inactivo'"
+                    [class.status-bloqueado]="registro.estatus === 'Bloqueado'"
+                    [class.status-pendiente]="registro.estatus === 'Pendiente'">
+                {{ registro.estatus || '—' }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-icon" (click)="editarUsuario(i)" title="Editar">
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="usuariosFiltrados.length === 0">
+            <td colspan="9" class="empty-row">
+              <i class="fas fa-inbox"></i> No hay usuarios registrados
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="totals-row">
+            <td colspan="8">
+              <span class="total-label">Total de usuarios:</span>
+              <span class="total-value">{{ usuariosFiltrados.length }}</span>
+            </td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

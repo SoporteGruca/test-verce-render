@@ -1,0 +1,54 @@
+<div class="sidebar-overlay" [class.active]="isOpen" (click)="onToggle()"></div>
+
+<!-- Sidebar principal -->
+<aside class="sidebar" [class.open]="isOpen" [class.closed]="!isOpen">
+    <!-- Header del sidebar -->
+    <div class="sidebar-header">
+        <div class="logo-container">
+            <img src="images/LOGO-GRUCA.ico" alt="Logo" class="sidebar-logo">
+            <h2 class="company-name" *ngIf="isOpen">SCVehicular</h2>
+        </div>
+
+        <button class="toggle-btn" (click)="onToggle()">
+            <span class="toggle-icon">{{ isOpen ? '◀' : '▶' }}</span>
+        </button>
+    </div>
+
+    <nav class="sidebar-menu">
+    <ul>
+        <li *ngFor="let item of menuItems; let i = index">
+        <a [routerLink]="item.route" 
+            routerLinkActive="active-link"
+            #rla="routerLinkActive"
+            [class.active]="rla.isActive">
+            <span class="menu-icon">{{ item.icon }}</span>
+            <span class="menu-label" *ngIf="isOpen">{{ item.label }}</span>
+        </a>
+        </li>
+    </ul>
+    </nav>
+
+    <div class="sidebar-footer" *ngIf="isOpen">
+    <div class="user-info">
+        <div class="user-avatar">
+            <span *ngIf="userLevel === 'it'">👑</span>
+            <span *ngIf="userLevel === 'admin'">✏️</span>
+            <span *ngIf="userLevel === 'user'">🧸</span>
+            <span *ngIf="userLevel === 'visit'">🏀</span>
+            <span *ngIf="!userLevel || userLevel === 'desconocido'">❓</span>
+        </div>
+        <div class="user-details">
+
+        <p class="user-name"> {{ username }}</p>
+        <p class="user-role"> {{ userLevel }} </p>
+
+        </div>
+    </div>
+
+    <button class="logout-btn" (click)="logout()">
+        <span class="logout-icon">🚪</span>
+        <span>Cerrar Sesión</span>
+    </button>
+    </div>
+
+</aside>

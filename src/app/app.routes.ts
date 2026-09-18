@@ -3,6 +3,9 @@ import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { AuthGuard } from './service/auth.guard';
+import { Catalogo } from './pages/catalogo/catalogo';
+
+import { Usuarios } from './pages/usuarios/usuarios';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -13,6 +16,16 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         component: Dashboard,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'catalogo',
+        component: Catalogo,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'usuarios',
+        component: Usuarios,
         canActivate: [AuthGuard]
     },
     { path: '**', redirectTo: '/login' }

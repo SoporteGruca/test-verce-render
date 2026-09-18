@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo Vehicular · Angular Ready</title>
+  <!-- Font Awesome (opcional, para iconos) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    body {
+      background: #f4f7fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    .card {
+      max-width: 1360px;
+      width: 100%;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 20px 40px -12px rgba(0,20,50,0.25);
+      padding: 2rem 2rem 1.8rem;
+      transition: all 0.2s;
+    }
+
+    /* Título */
+    .catalogo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.8rem;
+      border-bottom: 2px solid #eef2f7;
+      padding-bottom: 0.75rem;
+    }
+    .catalogo-header h1 {
+      font-weight: 600;
+      font-size: 1.9rem;
+      letter-spacing: -0.5px;
+      color: #0b2a4a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .catalogo-header h1 i {
+      color: #2a7de1;
+    }
+
+    /* layout principal: formulario + vista */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 0.5rem;
+    }
+
+    /* ===== FORMULARIO IZQUIERDO ===== */
+    .form-section {
+      background: #f9fbfe;
+      border-radius: 20px;
+      padding: 1.5rem 1.5rem 1.8rem;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+      border: 1px solid #e9edf4;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem 1.8rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      margin-bottom: 0.25rem;
+    }
+    .form-group label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #4c5b73;
+      margin-top: 0.1rem;
+    }
+    .form-group input, 
+    .form-group select {
+      background: white;
+      border: 1px solid #d9e0e9;
+      border-radius: 12px;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      outline: none;
+      width: 100%;
+    }
+    .form-group input:focus, 
+    .form-group select:focus {
+      border-color: #2a7de1;
+      box-shadow: 0 0 0 3px rgba(42,125,225,0.15);
+    }
+    .form-group input::placeholder {
+      color: #aab3c2;
+      font-weight: 300;
+      font-size: 0.8rem;
+    }
+
+    /* campo comentario ocupa 2 columnas */
+    .full-width {
+      grid-column: span 2;
+    }
+
+    .comentario-area {
+      background: white;
+      border: 1px solid #d9e0e9;
+      border-radius: 12px;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.9rem;
+      resize: vertical;
+      min-height: 52px;
+      width: 100%;
+      font-family: inherit;
+      transition: 0.15s;
+      outline: none;
+    }
+    .comentario-area:focus {
+      border-color: #2a7de1;
+      box-shadow: 0 0 0 3px rgba(42,125,225,0.12);
+    }
+
+    /* Botones laterales (sección derecha) */
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+    .action-buttons button {
+      background: white;
+      border: 1px solid #d0d8e3;
+      border-radius: 30px;
+      padding: 0.6rem 1rem;
+      font-weight: 500;
+      color: #1b2c44;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      transition: all 0.15s;
+      cursor: pointer;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+      width: 100%;
+    }
+    .action-buttons button i {
+      font-size: 1rem;
+      color: #3f5a7a;
+      width: 1.4rem;
+    }
+    .action-buttons button:hover {
+      background: #f0f4fe;
+      border-color: #2a7de1;
+      transform: scale(1.01);
+    }
+    .action-buttons button.primary-btn {
+      background: #1d3d6b;
+      border-color: #1d3d6b;
+      color: white;
+    }
+    .action-buttons button.primary-btn i {
+      color: white;
+    }
+    .action-buttons button.primary-btn:hover {
+      background: #143158;
+      border-color: #143158;
+    }
+
+    /* ===== VISTA TABLA (DERECHA) ===== */
+    .view-section {
+      background: #f2f5fa;
+      border-radius: 20px;
+      padding: 1.2rem 1.2rem 0.8rem;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* filtros encima de la tabla */
+    .filters-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      margin-bottom: 1.2rem;
+      padding: 0.2rem 0.2rem 0.8rem;
+      border-bottom: 1px solid #dce3ec;
+    }
+    .filter-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: white;
+      padding: 0.2rem 0.9rem 0.2rem 1rem;
+      border-radius: 30px;
+      border: 1px solid #d0d9e5;
+    }
+    .filter-item i {
+      color: #5f738f;
+      font-size: 0.8rem;
+    }
+    .filter-item input {
+      border: none;
+      padding: 0.4rem 0.1rem;
+      font-size: 0.8rem;
+      background: transparent;
+      outline: none;
+      width: 90px;
+    }
+    .filter-item input::placeholder {
+      color: #9aabbf;
+    }
+
+    /* tabla (vista gris) */
+    .table-wrapper {
+      background: #e9eef5;
+      border-radius: 18px;
+      padding: 0.2rem 0.2rem 0.2rem 0.2rem;
+      overflow-x: auto;
+      flex: 1;
+    }
+    .vehiculo-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      background: #eef2f8;
+      border-radius: 16px;
+      overflow: hidden;
+      min-width: 480px;
+    }
+    .vehiculo-table th {
+      text-align: left;
+      padding: 0.8rem 0.6rem;
+      background: #dce3ed;
+      color: #1a2e4a;
+      font-weight: 600;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .vehiculo-table td {
+      padding: 0.7rem 0.6rem;
+      background: #f6f9ff;
+      border-bottom: 1px solid #dbe1ea;
+      color: #1d3149;
+    }
+    .vehiculo-table tr:last-child td {
+      border-bottom: none;
+    }
+    .vehiculo-table .empty-row td {
+      background: #e9eef5;
+      color: #68768b;
+      font-style: italic;
+      text-align: center;
+      padding: 1.5rem 0;
+    }
+
+    .table-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0.8rem;
+      padding-right: 0.2rem;
+    }
+    .table-footer span {
+      background: #dce3ed;
+      padding: 0.25rem 1rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #173152;
+    }
+
+    /* BOTÓN SALIR */
+    .exit-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+      border-top: 1px solid #e0e7f0;
+      padding-top: 1.2rem;
+    }
+    .exit-btn {
+      background: transparent;
+      border: 1px solid #c7d2df;
+      border-radius: 60px;
+      padding: 0.4rem 2.2rem;
+      color: #3d5577;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      transition: 0.15s;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .exit-btn:hover {
+      background: #f0f4fa;
+      border-color: #8ca0bb;
+    }
+
+    /* responsive */
+    @media (max-width: 920px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 550px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .full-width {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- HEADER -->
+  <div class="catalogo-header">
+    <h1><i class="fas fa-car-side"></i> Catálogo Vehicular</h1>
+    <span style="color: #5d7390; font-size: 0.9rem; background: #e9eff6; padding: 0.3rem 1.2rem; border-radius: 40px;">
+      <i class="fas fa-database"></i> Angular · Firebase ready
+    </span>
+  </div>
+
+  <!-- GRID PRINCIPAL -->
+  <div class="dashboard-grid">
+
+    <!-- ========== FORMULARIO IZQUIERDO ========== -->
+    <div class="form-section">
+      <form (ngSubmit)="onSubmit()" #vehiculoForm="ngForm">
+        <div class="form-grid">
+
+          <!-- No Económico -->
+          <div class="form-group">
+            <label><i class="far fa-hashtag"></i> No Económico</label>
+            <input type="text" name="noEconomico" [(ngModel)]="vehiculo.noEconomico" placeholder="Ej. 1234">
+          </div>
+          <!-- Estado -->
+          <div class="form-group">
+            <label><i class="fas fa-circle"></i> Estado</label>
+            <input type="text" name="estado" [(ngModel)]="vehiculo.estado" placeholder="Activo / Inactivo">
+          </div>
+          <!-- Marca -->
+          <div class="form-group">
+            <label><i class="fas fa-tag"></i> Marca</label>
+            <input type="text" name="marca" [(ngModel)]="vehiculo.marca" placeholder="Toyota, Ford...">
+          </div>
+          <!-- Tipo -->
+          <div class="form-group">
+            <label><i class="fas fa-vehicle"></i> Tipo</label>
+            <input type="text" name="tipo" [(ngModel)]="vehiculo.tipo" placeholder="Sedán, Camioneta">
+          </div>
+          <!-- Tipo Corto -->
+          <div class="form-group">
+            <label><i class="fas fa-arrow-right"></i> Tipo Corto</label>
+            <input type="text" name="tipoCorto" [(ngModel)]="vehiculo.tipoCorto" placeholder="SED, CAM">
+          </div>
+          <!-- Propietario -->
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Propietario</label>
+            <input type="text" name="propietario" [(ngModel)]="vehiculo.propietario" placeholder="Nombre o empresa">
+          </div>
+          <!-- Monto Límite -->
+          <div class="form-group">
+            <label><i class="fas fa-coins"></i> Monto Límite</label>
+            <input type="text" name="montoLimite" [(ngModel)]="vehiculo.montoLimite" placeholder="$ 0.00">
+          </div>
+
+          <!-- segunda fila (modelo, color, serie, motor, empresa, usuario, facturación) -->
+          <div class="form-group">
+            <label><i class="fas fa-calendar-alt"></i> Modelo</label>
+            <input type="text" name="modelo" [(ngModel)]="vehiculo.modelo" placeholder="2023">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-palette"></i> Color</label>
+            <input type="text" name="color" [(ngModel)]="vehiculo.color" placeholder="Rojo, Azul">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-barcode"></i> No. serie</label>
+            <input type="text" name="noSerie" [(ngModel)]="vehiculo.noSerie" placeholder="VIN">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-cogs"></i> No. Motor</label>
+            <input type="text" name="noMotor" [(ngModel)]="vehiculo.noMotor" placeholder="Motor #">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-building"></i> Empresa</label>
+            <input type="text" name="empresa" [(ngModel)]="vehiculo.empresa" placeholder="Empresa">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-id-badge"></i> Usuario</label>
+            <input type="text" name="usuario" [(ngModel)]="vehiculo.usuario" placeholder="Asignado a">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-file-invoice"></i> Facturación</label>
+            <input type="text" name="facturacion" [(ngModel)]="vehiculo.facturacion" placeholder="Fact. #">
+          </div>
+
+          <!-- Placa, Días para, Kilometraje -->
+          <div class="form-group">
+            <label><i class="fas fa-license-plate"></i> Placa</label>
+            <input type="text" name="placa" [(ngModel)]="vehiculo.placa" placeholder="ABC-123">
+          </div>
+          <div class="form-group">
+            <label><i class="far fa-calendar-check"></i> Días para</label>
+            <input type="text" name="diasPara" [(ngModel)]="vehiculo.diasPara" placeholder="30">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-tachometer-alt"></i> Kilometraje</label>
+            <input type="text" name="kilometraje" [(ngModel)]="vehiculo.kilometraje" placeholder="12,400">
+          </div>
+
+          <!-- Placa Anterior, Control Gas -->
+          <div class="form-group">
+            <label><i class="fas fa-history"></i> Placa Anterior</label>
+            <input type="text" name="placaAnterior" [(ngModel)]="vehiculo.placaAnterior" placeholder="XYZ-789">
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-gas-pump"></i> Control Gas</label>
+            <input type="text" name="controlGas" [(ngModel)]="vehiculo.controlGas" placeholder="SI / NO">
+          </div>
+
+          <!-- Comentario (full-width) -->
+          <div class="full-width form-group">
+            <label><i class="fas fa-comment"></i> Comentario</label>
+            <textarea class="comentario-area" name="comentario" [(ngModel)]="vehiculo.comentario" placeholder="Observaciones..."></textarea>
+          </div>
+
+          <!-- BOTONES DE ACCIÓN (dentro del form, lado derecho) -->
+          <div class="full-width" style="margin-top: 0.5rem;">
+            <div class="action-buttons">
+              <button type="submit" class="primary-btn"><i class="fas fa-save"></i> Guardar</button>
+              <button type="button" (click)="cargarEjemplo()"><i class="fas fa-upload"></i> Cargar ejemplo</button>
+              <button type="button" (click)="limpiarForm()"><i class="fas fa-eraser"></i> Limpiar</button>
+              <button type="button" (click)="recargarVista()"><i class="fas fa-sync-alt"></i> Refrescar vista</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- ========== VISTA DERECHA (TABLA GRIS) ========== -->
+    <div class="view-section">
+      <!-- Filtros -->
+      <div class="filters-bar">
+        <div class="filter-item"><i class="fas fa-search"></i><input type="text" placeholder="Marca" [(ngModel)]="filtroMarca" (input)="aplicarFiltros()"></div>
+        <div class="filter-item"><i class="fas fa-search"></i><input type="text" placeholder="Modelo" [(ngModel)]="filtroModelo" (input)="aplicarFiltros()"></div>
+        <div class="filter-item"><i class="fas fa-search"></i><input type="text" placeholder="Propietario" [(ngModel)]="filtroPropietario" (input)="aplicarFiltros()"></div>
+        <div class="filter-item"><i class="fas fa-search"></i><input type="text" placeholder="Placa" [(ngModel)]="filtroPlaca" (input)="aplicarFiltros()"></div>
+        <span style="font-size: 0.75rem; color: #38526b; margin-left: auto; background: white; padding: 0.2rem 1rem; border-radius: 30px;">
+          <i class="fas fa-sliders-h"></i> filtros
+        </span>
+      </div>
+
+      <!-- Tabla (vista gris) -->
+      <div class="table-wrapper">
+        <table class="vehiculo-table">
+          <thead>
+            <tr>
+              <th>Unidad</th>
+              <th>Estado</th>
+              <th>Modelo</th>
+              <th>Propietario</th>
+              <th>Marca</th>
+              <th>Facturado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filas generadas desde datos simulados (en app.component se llenaría) -->
+            <tr *ngFor="let v of vehiculosFiltrados">
+              <td><strong>{{ v.noEconomico || '—' }}</strong></td>
+              <td>{{ v.estado || '—' }}</td>
+              <td>{{ v.modelo || '—' }}</td>
+              <td>{{ v.propietario || '—' }}</td>
+              <td>{{ v.marca || '—' }}</td>
+              <td>{{ v.facturacion || '—' }}</td>
+            </tr>
+            <tr *ngIf="vehiculosFiltrados.length === 0">
+              <td colspan="6" class="empty-row">No hay registros • agrega uno desde el formulario</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- contador y salir -->
+      <div class="table-footer">
+        <span><i class="far fa-list-alt"></i> {{ vehiculosFiltrados.length }} registros</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÓN SALIR (global) -->
+  <div class="exit-row">
+    <button class="exit-btn" (click)="salir()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+  </div>
+
+</div>
+
+<!-- ================================================= -->
+<!-- ESCENARIO ANGULAR: lógica mínima para conexión DB -->
+<!-- Se incluye un script con la lógica básica (simulada) -->
+<script>
+  // Simulación de un componente Angular (para demostración en HTML puro)
+  // En un proyecto real esto iría en el .ts de AppComponent
+  (function() {
+    // Datos mock (simulando base de datos)
+    let mockVehiculos = [
+      { noEconomico: '101', estado: 'Activo', marca: 'Toyota', tipo: 'Camioneta', tipoCorto: 'CAM', propietario: 'Logística SA', montoLimite: '2500', modelo: '2022', color: 'Blanco', noSerie: 'JT123', noMotor: 'MTR-22', empresa: 'Grupo XYZ', usuario: 'Carlos R.', facturacion: 'FAC-001', placa: 'ABC-123', diasPara: '45', kilometraje: '15400', placaAnterior: 'XYZ-789', controlGas: 'SI', comentario: 'Servicio reciente' },
+      { noEconomico: '205', estado: 'Inactivo', marca: 'Ford', tipo: 'Sedán', tipoCorto: 'SED', propietario: 'RentaCar', montoLimite: '1800', modelo: '2021', color: 'Gris', noSerie: 'FD789', noMotor: 'MTR-45', empresa: 'RentaCar', usuario: 'Laura M.', facturacion: 'FAC-002', placa: 'DEF-456', diasPara: '12', kilometraje: '32100', placaAnterior: 'ABC-456', controlGas: 'NO', comentario: 'Próximo mantenimiento' }
+    ];
+
+    // Estado de la aplicación (simulando AppComponent)
+    const state = {
+      vehiculo: {
+        noEconomico: '', estado: '', marca: '', tipo: '', tipoCorto: '', propietario: '', montoLimite: '',
+        modelo: '', color: '', noSerie: '', noMotor: '', empresa: '', usuario: '', facturacion: '',
+        placa: '', diasPara: '', kilometraje: '', placaAnterior: '', controlGas: '', comentario: ''
+      },
+      vehiculos: [...mockVehiculos],
+      filtroMarca: '',
+      filtroModelo: '',
+      filtroPropietario: '',
+      filtroPlaca: ''
+    };
+
+    // función para obtener filtrados
+    function getFiltrados() {
+      const { filtroMarca, filtroModelo, filtroPropietario, filtroPlaca, vehiculos } = state;
+      return vehiculos.filter(v => {
+        const matchMarca = v.marca?.toLowerCase().includes(filtroMarca.toLowerCase()) || !filtroMarca;
+        const matchModelo = v.modelo?.toLowerCase().includes(filtroModelo.toLowerCase()) || !filtroModelo;
+        const matchProp = v.propietario?.toLowerCase().includes(filtroPropietario.toLowerCase()) || !filtroPropietario;
+        const matchPlaca = v.placa?.toLowerCase().includes(filtroPlaca.toLowerCase()) || !filtroPlaca;
+        return matchMarca && matchModelo && matchProp && matchPlaca;
+      });
+    }
+
+    // Enlazar con el DOM (actualización reactiva)
+    function actualizarVista() {
+      const filtrados = getFiltrados();
+      // actualizar tabla
+      const tbody = document.querySelector('.vehiculo-table tbody');
+      if (tbody) {
+        if (filtrados.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="empty-row">No hay registros • agrega uno desde el formulario</td></tr>`;
+        } else {
+          tbody.innerHTML = filtrados.map(v => `
+            <tr>
+              <td><strong>${v.noEconomico || '—'}</strong></td>
+              <td>${v.estado || '—'}</td>
+              <td>${v.modelo || '—'}</td>
+              <td>${v.propietario || '—'}</td>
+              <td>${v.marca || '—'}</td>
+              <td>${v.facturacion || '—'}</td>
+            </tr>
+          `).join('');
+        }
+        // actualizar contador
+        const counter = document.querySelector('.table-footer span');
+        if (counter) counter.innerHTML = `<i class="far fa-list-alt"></i> ${filtrados.length} registros`;
+      }
+    }
+
+    // asignar funciones globales (para usar en onclick de HTML)
+    window.aplicarFiltros = function() {
+      // leer valores de inputs
+      const filtroMarcaInput = document.querySelector('.filter-item input[placeholder="Marca"]');
+      const filtroModeloInput = document.querySelector('.filter-item input[placeholder="Modelo"]');
+      const filtroPropInput = document.querySelector('.filter-item input[placeholder="Propietario"]');
+      const filtroPlacaInput = document.querySelector('.filter-item input[placeholder="Placa"]');
+      if (filtroMarcaInput) state.filtroMarca = filtroMarcaInput.value;
+      if (filtroModeloInput) state.filtroModelo = filtroModeloInput.value;
+      if (filtroPropInput) state.filtroPropietario = filtroPropInput.value;
+      if (filtroPlacaInput) state.filtroPlaca = filtroPlacaInput.value;
+      actualizarVista();
+    };
+
+    window.cargarEjemplo = function() {
+      // Carga datos de ejemplo en el formulario (simula selección)
+      const ejemplo = mockVehiculos[0];
+      const campos = ['noEconomico','estado','marca','tipo','tipoCorto','propietario','montoLimite','modelo','color','noSerie','noMotor','empresa','usuario','facturacion','placa','diasPara','kilometraje','placaAnterior','controlGas','comentario'];
+      campos.forEach(campo => {
+        const el = document.querySelector(`[name="${campo}"]`);
+        if (el) el.value = ejemplo[campo] || '';
+      });
+      // actualizar state (para mantener coherencia)
+      const form = document.querySelector('form');
+      if (form) {
+        const formData = new FormData(form);
+        campos.forEach(c => {
+          state.vehiculo[c] = formData.get(c) || '';
+        });
+      }
+    };
+
+    window.limpiarForm = function() {
+      const inputs = document.querySelectorAll('form input, form textarea');
+      inputs.forEach(inp => inp.value = '');
+      Object.keys(state.vehiculo).forEach(key => state.vehiculo[key] = '');
+    };
+
+    window.recargarVista = function() {
+      // Simula recarga de datos desde DB
+      state.vehiculos = [...mockVehiculos];
+      actualizarVista();
+    };
+
+    window.salir = function() {
+      alert('Función Salir · cerrar sesión o redirigir');
+    };
+
+    // Submit del formulario
+    document.querySelector('form')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Capturar datos y guardar (simular inserción)
+      const formData = new FormData(this);
+      const nuevo = {};
+      for (let [key, value] of formData.entries()) {
+        nuevo[key] = value;
+      }
+      // Agregar a la lista (simular DB)
+      state.vehiculos.push(nuevo);
+      // Actualizar vista
+      actualizarVista();
+      // limpiar campos
+      window.limpiarForm();
+      alert('Vehículo guardado (simulación)');
+    });
+
+    // inicializar vista
+    actualizarVista();
+
+    // Sincronizar cambios en filtros con el state (se llama desde input)
+    // ya están con (input) en los filtros
+  })();
+</script>
+
+</body>
+</html>

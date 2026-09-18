@@ -1,0 +1,302 @@
+$sidebar-width: 250px;
+$sidebar-width-closed: 70px;
+$primary-color: #4361ee;
+$secondary-color: #3a0ca3;
+$text-color: #333;
+$text-light: #ccc;
+$bg-color: #ffffff;
+$border-color: #e9ecef;
+$hover-color: #dbdcddc5;
+
+// Overlay para móviles
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+
+    &.active {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+// Sidebar principal
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background: $bg-color;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+
+    &.open {
+        width: $sidebar-width;
+        
+        .sidebar-header {
+            padding: 20px;
+        }
+        
+        .menu-label {
+            opacity: 1;
+            width: auto;
+        }
+    }
+
+    &.closed {
+        width: $sidebar-width-closed;
+        
+        .sidebar-header {
+            padding: 20px 0px;
+        }
+        
+        .company-name,
+        .menu-label,
+        .user-details,
+        .logout-btn span:last-child {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+    }
+}
+
+.no-sidebar .main-content {
+    margin-left: 0;
+    width: 100%;
+}
+
+// Header del sidebar
+.sidebar-header {
+    border-bottom: 1px solid $border-color;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        overflow: hidden;
+
+        .sidebar-logo {
+            width: auto;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .company-name {
+            margin: 0;
+            font-size: 18px;
+            color: $primary-color;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: opacity 0.3s;
+        }
+    }
+
+    .toggle-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 6px;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: $hover-color;
+        }
+
+        .toggle-icon {
+            font-size: 16px;
+            color: $text-light;
+        }
+    }
+}
+
+// Menú de navegación
+.sidebar-menu {
+    flex: 1;
+    padding: 20px 0;
+    overflow-y: auto;
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        margin-bottom: 4px;
+        padding: 0 16px;
+
+        a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: $text-color;
+            transition: all 0.2s;
+            white-space: nowrap;
+            cursor: pointer;
+
+            &:hover {
+                background-color: $hover-color;
+            }
+
+            // ============================================
+            // ESTILO PARA EL ENLACE ACTIVO (routerLinkActive)
+            // ============================================
+            &.active-link {
+                background: linear-gradient(135deg, $primary-color, $secondary-color);
+                color: white;
+                font-weight: 500;
+
+                .menu-icon {
+                    color: white;
+                }
+            }
+
+            // ============================================
+            // ESTILO PARA LA CLASE 'active' (sincronizada con rla.isActive)
+            // ============================================
+            &.active {
+                background: linear-gradient(135deg, $primary-color, $secondary-color);
+                color: white;
+                font-weight: 500;
+
+                .menu-icon {
+                    color: white;
+                }
+            }
+
+            .menu-icon {
+                font-size: 20px;
+                width: 24px;
+                text-align: center;
+                flex-shrink: 0;
+                transition: color 0.2s;
+            }
+
+            .menu-label {
+                transition: opacity 0.3s;
+                overflow: hidden;
+            }
+        }
+    }
+}
+
+// Footer del sidebar
+.sidebar-footer {
+    border-top: 1px solid $border-color;
+    padding: 20px;
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        overflow: hidden;
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, $primary-color, $secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .user-details {
+            overflow: hidden;
+            transition: opacity 0.3s;
+
+            .user-name {
+                margin: 0;
+                font-weight: 600;
+                color: $text-color;
+                font-size: 14px;
+            }
+
+            .user-role {
+                margin: 4px 0 0 0;
+                color: $text-light;
+                font-size: 12px;
+                text-transform: capitalize;
+            }
+        }
+    }
+
+    // Botón de cerrar sesión
+    .logout-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 12px 16px;
+        background: rgba(220, 53, 69, 0.1);
+        border: none;
+        border-radius: 8px;
+        color: #dc3545;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+
+        &:hover {
+            background: rgba(220, 53, 69, 0.2);
+        }
+
+        .logout-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        span:last-child {
+            transition: opacity 0.3s;
+            overflow: hidden;
+        }
+    }
+}
+
+// Responsive para móviles
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        
+        &.open {
+            transform: translateX(0);
+            width: $sidebar-width;
+        }
+        
+        &.closed {
+            transform: translateX(-100%);
+        }
+    }
+}
+
+// Para tablets y escritorio
+@media (min-width: 769px) {
+    .sidebar-overlay {
+        display: none;
+    }
+}

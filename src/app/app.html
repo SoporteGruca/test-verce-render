@@ -1,1 +1,16 @@
-<router-outlet />
+<div class="app-container">
+    <app-sidebar [class.sidebar-hidden]="!isAuthenticated" [class.sidebar-visible]="isAuthenticated"
+        [isOpen]="sidebarOpen" [isVisible]="isAuthenticated" (toggleSidebar)="toggleSidebar()">
+    </app-sidebar>
+
+    <main class="main-content" [class.sidebar-open]="sidebarOpen && isAuthenticated"
+        [class.sidebar-closed]="!sidebarOpen || !isAuthenticated" [class.no-sidebar]="!isAuthenticated">
+
+    <button class="hamburger-btn" (click)="toggleSidebar()" *ngIf="!sidebarOpen && isAuthenticated">
+    ☰
+    </button>
+
+    <router-outlet></router-outlet>
+
+    </main>
+</div>
