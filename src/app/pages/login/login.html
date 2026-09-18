@@ -1,1 +1,60 @@
-<p>login works!</p>
+<div class="login-container">
+    <div class="login-card">
+
+        <!-- Header -->
+        <div class="login-header">
+            <div class="logo-container">
+                <h1 class="logo">Sistema de control de Vehiculos</h1>
+            </div>
+            <h2>Iniciar Sesión</h2>
+        </div>
+
+        <form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="login-form">
+
+            <div class="input-group">
+                <div class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <input type="text" id="username" name="username" [(ngModel)]="username" #usernameInput="ngModel"
+                    required class="form-input" placeholder="Ingresa tu usuario"
+                    [class.error]="usernameInput.invalid && usernameInput.touched" />
+            </div>
+
+            <div class="input-group">
+                <div class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <input type="password" id="password" name="password" [(ngModel)]="password" #passwordInput="ngModel"
+                    required class="form-input" placeholder="Ingresa tu contraseña"
+                    [class.error]="passwordInput.invalid && passwordInput.touched" />
+            </div>
+
+            <div class="password-toggle" *ngIf="password">
+                <label class="toggle-label">
+                    <input type="checkbox" (change)="togglePasswordVisibility($event)">
+                    <span class="toggle-text">Mostrar contraseña</span>
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn" [disabled]="loginForm.invalid || isLoading"
+                [class.loading]="isLoading">
+                <span class="btn-content">
+                    <span class="btn-text" *ngIf="!isLoading">Iniciar Sesión</span>
+                    <span class="btn-text" *ngIf="isLoading">Autenticando...</span>
+                </span>
+                <span class="btn-loader" *ngIf="isLoading">
+                    <div class="loader"></div>
+                </span>
+            </button>
+
+        </form>
+    </div>
+</div>
