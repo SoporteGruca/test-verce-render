@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-//import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule, FormBuilder } from '@angular/forms';
-//import { Toasts } from '../../service/toasts';
-//import { Auth } from '../../service/auth';
+import { Toasts } from '../../service/toasts';
+import { Auth } from '../../service/auth';
 
 @Component({
     selector: 'app-login',
@@ -13,7 +13,7 @@ import { FormsModule, FormBuilder } from '@angular/forms';
         CommonModule,
         FormsModule,
         RouterModule,
-        // MatSnackBarModule
+        MatSnackBarModule
     ],
     templateUrl: './login.html',
     styleUrl: './login.scss',
@@ -36,8 +36,8 @@ export class Login implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        //private auth: Auth,
-        //private toasts: Toasts,
+        private auth: Auth,
+        private toasts: Toasts,
         private cdr: ChangeDetectorRef,
         @Inject(PLATFORM_ID) private platformId: Object
     ) { }
@@ -48,10 +48,10 @@ export class Login implements OnInit {
         return;
     }
     
-    // if (this.auth.hasValidToken()) {
-    //     this.cdr.detectChanges();
-    //     this.router.navigate(['/dashboard']);
-    // }
+    if (this.auth.hasValidToken()) {
+        this.cdr.detectChanges();
+        this.router.navigate(['/dashboard']);
+    }
 }
 
     ngOnInit(): void {
@@ -64,18 +64,18 @@ export class Login implements OnInit {
     }
     
     // Verificar si hay token válido
-    // const hasValidToken = this.auth.hasValidToken();
-    // console.log('🔍 Token válido en ngOnInit:', hasValidToken);
+    const hasValidToken = this.auth.hasValidToken();
+    console.log('🔍 Token válido en ngOnInit:', hasValidToken);
     
-    // if (hasValidToken) {
-    //     console.log('✅ Token válido, redirigiendo a dashboard');
-    //     this.router.navigate(['/dashboard']);
-    // } else {
-    //     console.log('❌ No hay token válido, mostrando login');
-    //     // Limpiar cualquier token corrupto
-    //     this.auth.removeToken();
-    //     this.auth.removeUser();
-    // }
+    if (hasValidToken) {
+        console.log('✅ Token válido, redirigiendo a dashboard');
+        this.router.navigate(['/dashboard']);
+    } else {
+        console.log('❌ No hay token válido, mostrando login');
+        // Limpiar cualquier token corrupto
+        this.auth.removeToken();
+        this.auth.removeUser();
+    }
 }
 
     onSubmit(): void {
@@ -83,30 +83,30 @@ export class Login implements OnInit {
     this.isLoading = true;
     this.clearMessages();
 
-        // this.auth.login(this.username, this.password).subscribe({
-        //     next: (response) => {
-        //         console.log('✅ Login response:', response);
-        //         this.isLoading = false;
-        //         if (response?.success) {
-        //             console.log('✅ Login exitoso, redirigiendo...');
-        //             this.handleSuccess(response);
-        //         } else {
-        //             console.log('❌ Login falló:', response?.message);
-        //             this.handleError(response);
-        //         }
-        //     },
-        //     error: (error) => {
-        //         console.error('❌ Login error:', error);
-        //         this.isLoading = false;
-        //         this.handleError(error);
-        //     }
-        // });
+        this.auth.login(this.username, this.password).subscribe({
+            next: (response) => {
+                console.log('✅ Login response:', response);
+                this.isLoading = false;
+                if (response?.success) {
+                    console.log('✅ Login exitoso, redirigiendo...');
+                    this.handleSuccess(response);
+                } else {
+                    console.log('❌ Login falló:', response?.message);
+                    this.handleError(response);
+                }
+            },
+            error: (error) => {
+                console.error('❌ Login error:', error);
+                this.isLoading = false;
+                this.handleError(error);
+            }
+        });
     }
 
     private handleSuccess(response: any): void {
         const message = response.message || '¡Login exitoso!';
         this.successMessage = message;
-        // this.toasts.showSuccess(message);
+        this.toasts.showSuccess(message);
 
         // Redirigir después de 1 segundo
         setTimeout(() => {
@@ -122,7 +122,7 @@ export class Login implements OnInit {
     private handleError(response: any): void {
         const message = response?.message || 'Credenciales incorrectas';
         this.errorMessage = message;
-        // this.toasts.showError(message);
+        this.toasts.showError(message);
     }
 
     private clearMessages(): void {
